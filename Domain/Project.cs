@@ -6,6 +6,6 @@ public class Project
     public string Name { get; set; }
     public int CompanyId { get; set; }
     public virtual Company Company { get; set; }
-    public ICollection<Issue> Issues { get; set; }
-    public ICollection<Employee> Employees { get; set; }
+    public virtual ICollection<Issue> Issues { get; set; } = new List<Issue>();
+    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }

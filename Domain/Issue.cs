@@ -6,6 +6,6 @@ public class Issue
     public string Title { get; set; }
     public string Description { get; set; }
     public int ProjectId { get; set; }
-    public Project Project { get; set; }
-    public ICollection<Employee> AssignedEmployees { get; set; }
+    public virtual Project Project { get; set; }
+    public virtual ICollection<Employee> AssignedEmployees { get; set; } = new List<Employee>();
 }
