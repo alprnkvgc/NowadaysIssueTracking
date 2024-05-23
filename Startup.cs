@@ -1,5 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using NowadaysIssueTracking.Interfaces;
+using NowadaysIssueTracking.Repositories;
+using NowadaysIssueTracking.Services;
 
 namespace NowadaysIssueTracking;
 
@@ -10,8 +14,19 @@ public class Startup(IConfiguration configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddDbContext<NowadaysDbContext>(options =>
-            options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-        services.AddControllers();
+            options.UseLazyLoadingProxies()
+                .UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+        services.AddControllers()
+            .AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); ;
+        services.AddAutoMapper(typeof(Startup));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<ITcKimlikNoValidationService, TcKimlikNoValidationService>();
+        services.AddScoped<ICompanyService, CompanyService>();
+        services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<IIssueService, IssueService>();
+        services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IReportService, ReportService>();
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Nowadays API", Version = "v1" });
